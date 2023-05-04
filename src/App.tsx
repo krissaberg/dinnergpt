@@ -1,26 +1,20 @@
 import './App.css';
-import { Configuration, OpenAIApi } from 'openai';
 import { generateChatCompletion, generateImage } from './openaiUtils';
 import { useState } from 'react';
 
 const PROMPT_RECIPE =
   'Give me a recipe title and list of ingredients that dont fit together';
 
-function App() {
+const App = () => {
   const [generatedDinner, setGeneratedDinner] = useState('');
   const [generatedDinnerImageSrc, setGeneratedDinnerImageSrc] = useState('');
 
-  const configuration = new Configuration({
-    apiKey: import.meta.env.VITE_OPEN_AI_API_KEY,
-  });
-  const openai = new OpenAIApi(configuration);
-
   const generateDinner = async (chatPrompt: string) => {
-    await generateChatCompletion(chatPrompt, openai)
+    await generateChatCompletion(chatPrompt)
       .then((data) => {
         data && setGeneratedDinner(data);
         data &&
-          generateImage(`Cartoon image of ${data}`, openai).then(
+          generateImage(`Cartoon image of ${data}`).then(
             (url) => url && setGeneratedDinnerImageSrc(url)
           );
       })
@@ -37,6 +31,6 @@ function App() {
       {generatedDinnerImageSrc && <img src={generatedDinnerImageSrc} />}
     </>
   );
-}
+};
 
 export default App;

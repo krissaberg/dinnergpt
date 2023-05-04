@@ -1,18 +1,11 @@
-import { OpenAIApi } from 'openai';
+import { Configuration, OpenAIApi } from 'openai';
 
-export const generateImage = async (prompt: string, openai: OpenAIApi) => {
-  const response = await openai.createImage({
-    prompt: prompt,
-    n: 1,
-    size: '256x256',
-  });
-  return response.data.data[0].url;
-};
+const configuration = new Configuration({
+  apiKey: import.meta.env.VITE_OPEN_AI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
 
-export const generateChatCompletion = async (
-  prompt: string,
-  openai: OpenAIApi
-) => {
+export const generateChatCompletion = async (prompt: string) => {
   const response = await openai.createCompletion({
     model: 'text-davinci-003',
     prompt: prompt,
@@ -21,4 +14,13 @@ export const generateChatCompletion = async (
   });
 
   return response.data.choices[0].text;
+};
+
+export const generateImage = async (prompt: string) => {
+  const response = await openai.createImage({
+    prompt: prompt,
+    n: 1,
+    size: '256x256',
+  });
+  return response.data.data[0].url;
 };
